@@ -1,0 +1,21 @@
+# KWT5H13LD Code Ownership
+# These owners will be automatically requested for review on PRs
+
+# Global owners — all changes require review from project lead
+*                       @SiteQ8
+
+# Core toolkit
+/kwt5h13ld.sh           @SiteQ8
+/modules/               @SiteQ8
+
+# GUI & Documentation
+/gui/                   @SiteQ8
+/docs/                  @SiteQ8
+/README.md              @SiteQ8
+
+# CI/CD & GitHub Config
+/.github/               @SiteQ8
+
+# Security-sensitive files
+/SECURITY.md            @SiteQ8
+/.github/workflows/     @SiteQ8
