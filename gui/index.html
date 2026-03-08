@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>KWT5H13LD — Kuwait Shield Security Toolkit</title>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;900&family=Rajdhani:wght@300;400;500;600;700&family=JetBrains+Mono:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+--bg:#050810;--surface:#0b1120;--surface2:#111827;--border:#1e2d4a;
+--blue:#4a9eff;--blue-dim:#1a3a6b;--blue-glow:rgba(74,158,255,.15);
+--cyan:#22d3ee;--green:#34d399;--red:#f87171;--amber:#fbbf24;
+--text:#e2e8f0;--text-dim:#64748b;--text-muted:#475569;
+}
+html{scroll-behavior:smooth}
+body{font-family:'Rajdhani',sans-serif;background:var(--bg);color:var(--text);overflow-x:hidden;line-height:1.6}
+
+/* Animated grid background */
+body::before{content:'';position:fixed;top:0;left:0;width:100%;height:100%;
+background:
+  linear-gradient(rgba(74,158,255,.03) 1px, transparent 1px),
+  linear-gradient(90deg, rgba(74,158,255,.03) 1px, transparent 1px);
+background-size:60px 60px;
+z-index:0;pointer-events:none;animation:gridScroll 40s linear infinite}
+@keyframes gridScroll{0%{transform:translate(0,0)}100%{transform:translate(60px,60px)}}
+
+/* Utility */
+.container{max-width:1280px;margin:0 auto;padding:0 24px;position:relative;z-index:1}
+
+/* ── HERO ── */
+.hero{min-height:100vh;display:flex;align-items:center;justify-content:center;flex-direction:column;text-align:center;position:relative}
+.hero::after{content:'';position:absolute;bottom:0;left:0;right:0;height:200px;
+background:linear-gradient(transparent,var(--bg));pointer-events:none;z-index:2}
+
+.hero-logo{width:180px;height:180px;margin-bottom:32px;position:relative;
+animation:float 6s ease-in-out infinite;filter:drop-shadow(0 0 40px rgba(74,158,255,.3))}
+@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-12px)}}
+
+.hero-title{font-family:'Orbitron',sans-serif;font-size:clamp(2.5rem,6vw,5rem);font-weight:900;
+letter-spacing:6px;line-height:1.1;margin-bottom:8px;
+background:linear-gradient(135deg,#4a9eff 0%,#22d3ee 50%,#4a9eff 100%);
+background-size:200% auto;-webkit-background-clip:text;background-clip:text;color:transparent;
+animation:shimmer 3s linear infinite}
+@keyframes shimmer{0%{background-position:0% center}100%{background-position:200% center}}
+
+.hero-subtitle{font-family:'Orbitron',sans-serif;font-size:clamp(.9rem,2vw,1.2rem);
+letter-spacing:8px;text-transform:uppercase;color:var(--blue);opacity:.8;margin-bottom:32px}
+
+.hero-desc{max-width:650px;font-size:1.15rem;color:var(--text-dim);font-weight:400;margin-bottom:40px;line-height:1.8}
+
+.hero-badges{display:flex;gap:12px;flex-wrap:wrap;justify-content:center;margin-bottom:48px}
+.badge{display:inline-flex;align-items:center;gap:6px;padding:6px 16px;
+border-radius:999px;font-family:'JetBrains Mono',monospace;font-size:.75rem;font-weight:500;
+border:1px solid var(--border);background:var(--surface);color:var(--text-dim)}
+.badge .dot{width:6px;height:6px;border-radius:50%;background:var(--green);
+animation:pulse 2s ease-in-out infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
+
+.hero-cta{display:flex;gap:16px;flex-wrap:wrap;justify-content:center}
+.btn{display:inline-flex;align-items:center;gap:8px;padding:14px 32px;border-radius:8px;
+font-family:'Orbitron',sans-serif;font-size:.85rem;font-weight:600;letter-spacing:2px;
+text-decoration:none;text-transform:uppercase;transition:all .3s;cursor:pointer;border:none}
+.btn-primary{background:linear-gradient(135deg,var(--blue),#2563eb);color:#fff;
+box-shadow:0 0 30px rgba(74,158,255,.25)}
+.btn-primary:hover{box-shadow:0 0 50px rgba(74,158,255,.4);transform:translateY(-2px)}
+.btn-ghost{background:transparent;color:var(--blue);border:1px solid var(--border)}
+.btn-ghost:hover{border-color:var(--blue);background:var(--blue-glow)}
+
+/* ── SECTION ── */
+section{padding:100px 0;position:relative;z-index:1}
+.section-label{font-family:'JetBrains Mono',monospace;font-size:.75rem;letter-spacing:4px;
+text-transform:uppercase;color:var(--blue);margin-bottom:8px;display:flex;align-items:center;gap:12px}
+.section-label::before{content:'';width:40px;height:1px;background:var(--blue)}
+.section-title{font-family:'Orbitron',sans-serif;font-size:clamp(1.6rem,3.5vw,2.8rem);
+font-weight:700;margin-bottom:16px;color:#fff}
+.section-desc{max-width:600px;color:var(--text-dim);font-size:1.05rem;margin-bottom:48px}
+
+/* ── MODULES GRID ── */
+.modules-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(340px,1fr));gap:20px}
+.module-card{background:var(--surface);border:1px solid var(--border);border-radius:12px;
+padding:28px;position:relative;overflow:hidden;transition:all .4s;cursor:default}
+.module-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;
+background:linear-gradient(90deg,transparent,var(--blue),transparent);opacity:0;transition:opacity .4s}
+.module-card:hover{border-color:var(--blue-dim);transform:translateY(-4px);
+box-shadow:0 12px 40px rgba(0,0,0,.4)}
+.module-card:hover::before{opacity:1}
+
+.module-icon{width:48px;height:48px;border-radius:10px;display:flex;align-items:center;justify-content:center;
+margin-bottom:16px;font-size:1.4rem;background:var(--blue-glow);border:1px solid var(--blue-dim)}
+.module-card h3{font-family:'Orbitron',sans-serif;font-size:1rem;font-weight:600;
+margin-bottom:8px;color:#fff;letter-spacing:1px}
+.module-card p{color:var(--text-dim);font-size:.9rem;line-height:1.6;margin-bottom:16px}
+.module-tags{display:flex;gap:6px;flex-wrap:wrap}
+.tag{padding:3px 10px;border-radius:4px;font-family:'JetBrains Mono',monospace;
+font-size:.65rem;background:var(--surface2);border:1px solid var(--border);color:var(--text-muted)}
+
+/* ── FEATURES ── */
+.features-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:24px;margin-top:48px}
+.feature-item{padding:24px;border-left:2px solid var(--border);transition:border-color .3s}
+.feature-item:hover{border-left-color:var(--blue)}
+.feature-item h4{font-family:'Orbitron',sans-serif;font-size:.85rem;font-weight:600;
+color:#fff;margin-bottom:8px;letter-spacing:1px}
+.feature-item p{color:var(--text-dim);font-size:.88rem}
+
+/* ── TERMINAL DEMO ── */
+.terminal{background:#0d1117;border:1px solid var(--border);border-radius:12px;overflow:hidden;
+max-width:800px;margin:0 auto;box-shadow:0 20px 60px rgba(0,0,0,.5)}
+.terminal-bar{display:flex;align-items:center;gap:8px;padding:12px 16px;background:#161b22;border-bottom:1px solid var(--border)}
+.terminal-dot{width:12px;height:12px;border-radius:50%}
+.terminal-dot.r{background:#f85149}.terminal-dot.y{background:#fbbf24}.terminal-dot.g{background:#34d399}
+.terminal-title{flex:1;text-align:center;font-family:'JetBrains Mono',monospace;font-size:.7rem;color:var(--text-muted)}
+.terminal-body{padding:24px;font-family:'JetBrains Mono',monospace;font-size:.8rem;line-height:2;overflow-x:auto}
+.terminal-body .prompt{color:var(--green)}
+.terminal-body .cmd{color:#fff}
+.terminal-body .output{color:var(--text-dim)}
+.terminal-body .pass{color:var(--green)}
+.terminal-body .fail{color:var(--red)}
+.terminal-body .info{color:var(--blue)}
+.terminal-body .warn{color:var(--amber)}
+
+/* ── STATS ── */
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:20px;margin:48px 0}
+.stat{text-align:center;padding:32px 16px;background:var(--surface);border:1px solid var(--border);border-radius:12px}
+.stat-num{font-family:'Orbitron',sans-serif;font-size:clamp(2rem,4vw,3.2rem);font-weight:900;
+background:linear-gradient(135deg,var(--blue),var(--cyan));-webkit-background-clip:text;background-clip:text;color:transparent}
+.stat-label{font-size:.85rem;color:var(--text-dim);margin-top:4px;letter-spacing:1px}
+
+/* ── TEAM ── */
+.team-card{display:flex;align-items:center;gap:32px;padding:40px;
+background:var(--surface);border:1px solid var(--border);border-radius:16px;
+max-width:700px;margin:0 auto}
+.team-avatar{width:100px;height:100px;border-radius:50%;border:3px solid var(--blue-dim);
+display:flex;align-items:center;justify-content:center;font-family:'Orbitron',sans-serif;
+font-size:2rem;font-weight:900;background:var(--blue-glow);color:var(--blue);flex-shrink:0}
+.team-info h3{font-family:'Orbitron',sans-serif;font-size:1.2rem;color:#fff;margin-bottom:4px}
+.team-info .role{color:var(--blue);font-size:.9rem;margin-bottom:12px}
+.team-links{display:flex;gap:12px}
+.team-links a{color:var(--text-dim);text-decoration:none;font-family:'JetBrains Mono',monospace;
+font-size:.8rem;padding:4px 12px;border:1px solid var(--border);border-radius:6px;transition:all .3s}
+.team-links a:hover{border-color:var(--blue);color:var(--blue)}
+
+/* ── INSTALL ── */
+.install-block{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:32px;
+max-width:700px;margin:0 auto}
+.install-step{display:flex;gap:16px;margin-bottom:24px}
+.step-num{width:32px;height:32px;border-radius:50%;background:var(--blue-glow);border:1px solid var(--blue-dim);
+display:flex;align-items:center;justify-content:center;font-family:'Orbitron',sans-serif;
+font-size:.75rem;font-weight:700;color:var(--blue);flex-shrink:0}
+.step-content code{display:block;margin-top:8px;padding:12px 16px;background:#0d1117;
+border-radius:6px;font-family:'JetBrains Mono',monospace;font-size:.8rem;color:var(--cyan);
+border:1px solid var(--border);overflow-x:auto}
+
+/* ── FOOTER ── */
+footer{padding:60px 0 40px;border-top:1px solid var(--border);text-align:center;position:relative;z-index:1}
+footer p{color:var(--text-muted);font-size:.85rem}
+footer .footer-logo{width:48px;opacity:.5;margin-bottom:16px}
+footer a{color:var(--blue);text-decoration:none}
+
+/* ── RESPONSIVE ── */
+@media(max-width:768px){
+.modules-grid{grid-template-columns:1fr}
+.stats{grid-template-columns:repeat(2,1fr)}
+.team-card{flex-direction:column;text-align:center}
+.team-links{justify-content:center}
+.features-row{grid-template-columns:1fr}
+}
+
+/* Scroll animations */
+.reveal{opacity:0;transform:translateY(30px);transition:all .8s cubic-bezier(.16,1,.3,1)}
+.reveal.visible{opacity:1;transform:translateY(0)}
+</style>
+</head>
+<body>
+
+<!-- ═══════════════ HERO ═══════════════ -->
+<section class="hero">
+<div class="container">
+  <img src="../logo.png" alt="KWT5H13LD" class="hero-logo" id="logo">
+  <h1 class="hero-title">KWT5H13LD</h1>
+  <p class="hero-subtitle">Guarding Kuwait's Cyber Gates</p>
+  <p class="hero-desc">An open-source blue team security toolkit built to protect, audit, and harden your infrastructure. One tool for everything — from cloud misconfiguration detection to incident response.</p>
+  <div class="hero-badges">
+    <span class="badge"><span class="dot"></span> Open Source</span>
+    <span class="badge">v1.0.0</span>
+    <span class="badge">Bash / Shell</span>
+    <span class="badge">Blue Team</span>
+    <span class="badge">Made in Kuwait 🇰🇼</span>
+  </div>
+  <div class="hero-cta">
+    <a href="https://github.com/SiteQ8/KWT5h13ld" class="btn btn-primary" target="_blank">★ Star on GitHub</a>
+    <a href="#install" class="btn btn-ghost">Quick Install →</a>
+  </div>
+</div>
+</section>
+
+<!-- ═══════════════ STATS ═══════════════ -->
+<section>
+<div class="container">
+  <div class="stats reveal">
+    <div class="stat"><div class="stat-num">30+</div><div class="stat-label">Security Modules</div></div>
+    <div class="stat"><div class="stat-num">9</div><div class="stat-label">Categories</div></div>
+    <div class="stat"><div class="stat-num">200+</div><div class="stat-label">Security Checks</div></div>
+    <div class="stat"><div class="stat-num">0</div><div class="stat-label">Dependencies Required</div></div>
+  </div>
+</div>
+</section>
+
+<!-- ═══════════════ MODULES ═══════════════ -->
+<section id="modules">
+<div class="container">
+  <div class="section-label">Arsenal</div>
+  <h2 class="section-title">Security Modules</h2>
+  <p class="section-desc">Every module you need to secure, audit, and defend your infrastructure — all in one toolkit.</p>
+
+  <div class="modules-grid">
+    <div class="module-card reveal">
+      <div class="module-icon">☁️</div>
+      <h3>Cloud Security Audit</h3>
+      <p>Detect public S3 buckets, open security groups, misconfigured IAM policies, unencrypted storage, and exposed cloud services across AWS, Azure, and GCP.</p>
+      <div class="module-tags"><span class="tag">AWS</span><span class="tag">Azure</span><span class="tag">GCP</span><span class="tag">IAM</span><span class="tag">Storage</span></div>
+    </div>
+
+    <div class="module-card reveal">
+      <div class="module-icon">🛡️</div>
+      <h3>System Hardening</h3>
+      <p>Run CIS benchmark checks on Linux systems — filesystem configuration, kernel parameters, SSH hardening, service enumeration, and user account security.</p>
+      <div class="module-tags"><span class="tag">CIS</span><span class="tag">SSH</span><span class="tag">Kernel</span><span class="tag">sysctl</span><span class="tag">Services</span></div>
+    </div>
+
+    <div class="module-card reveal">
+      <div class="module-icon">🌐</div>
+      <h3>Network Defense</h3>
+      <p>Network discovery, firewall rule auditing, DNS security assessment (DNSSEC, zone transfers, SPF/DMARC), and TLS/SSL certificate & cipher validation.</p>
+      <div class="module-tags"><span class="tag">Firewall</span><span class="tag">DNS</span><span class="tag">TLS</span><span class="tag">nmap</span><span class="tag">Ports</span></div>
+    </div>
+
+    <div class="module-card reveal">
+      <div class="module-icon">🔍</div>
+      <h3>Vulnerability Assessment</h3>
+      <p>System CVE scanning, web application security header checks, SUID/SGID binary detection, and dependency vulnerability auditing for npm, pip, and system packages.</p>
+      <div class="module-tags"><span class="tag">CVE</span><span class="tag">Web Headers</span><span class="tag">SUID</span><span class="tag">npm</span><span class="tag">Trivy</span></div>
+    </div>
+
+    <div class="module-card reveal">
+      <div class="module-icon">📋</div>
+      <h3>Compliance & Policy</h3>
+      <p>Automated checks against CIS Controls v8, ISO 27001 Annex A, PCI DSS v4.0, and password policy auditing with PAM and login.defs validation.</p>
+      <div class="module-tags"><span class="tag">CIS v8</span><span class="tag">ISO 27001</span><span class="tag">PCI DSS</span><span class="tag">Password</span></div>
+    </div>
+
+    <div class="module-card reveal">
+      <div class="module-icon">📊</div>
+      <h3>Log Analysis</h3>
+      <p>Authentication log analysis with brute force detection, syslog anomaly pattern detection, and auditd log review for suspicious system calls and file access.</p>
+      <div class="module-tags"><span class="tag">auth.log</span><span class="tag">syslog</span><span class="tag">auditd</span><span class="tag">Brute Force</span></div>
+    </div>
+
+    <div class="module-card reveal">
+      <div class="module-icon">🚨</div>
+      <h3>Incident Response</h3>
+      <p>Forensic system state snapshots, running process anomaly detection, active connection investigation, and persistence mechanism scanning (cron, systemd, profiles).</p>
+      <div class="module-tags"><span class="tag">Forensics</span><span class="tag">Processes</span><span class="tag">Connections</span><span class="tag">Persistence</span></div>
+    </div>
+
+    <div class="module-card reveal">
+      <div class="module-icon">🐳</div>
+      <h3>Container Security</h3>
+      <p>Docker CIS Benchmark auditing, Kubernetes cluster security assessment, container image vulnerability scanning, and privilege escalation detection.</p>
+      <div class="module-tags"><span class="tag">Docker</span><span class="tag">K8s</span><span class="tag">Images</span><span class="tag">Trivy</span><span class="tag">RBAC</span></div>
+    </div>
+
+    <div class="module-card reveal">
+      <div class="module-icon">📦</div>
+      <h3>Asset Inventory</h3>
+      <p>Full system asset and software inventory collection with hardware profiling, and port-to-service mapping for complete infrastructure visibility.</p>
+      <div class="module-tags"><span class="tag">Hardware</span><span class="tag">Software</span><span class="tag">Ports</span><span class="tag">Services</span></div>
+    </div>
+  </div>
+</div>
+</section>
+
+<!-- ═══════════════ FEATURES ═══════════════ -->
+<section>
+<div class="container">
+  <div class="section-label">Why KWT5H13LD</div>
+  <h2 class="section-title">Built for Defenders</h2>
+  <p class="section-desc">Designed by security practitioners for security practitioners. No fluff — just the tools you need.</p>
+
+  <div class="features-row">
+    <div class="feature-item reveal">
+      <h4>Zero Dependencies</h4>
+      <p>Runs on pure bash. Uses system tools already on your servers. No Python, no Ruby, no Node — just shell.</p>
+    </div>
+    <div class="feature-item reveal">
+      <h4>Modular Architecture</h4>
+      <p>Load only what you need. Each module is self-contained and independently executable via CLI or interactive menu.</p>
+    </div>
+    <div class="feature-item reveal">
+      <h4>Multi-Cloud Ready</h4>
+      <p>Supports AWS, Azure, and GCP with native CLI integration for cloud security auditing and IAM review.</p>
+    </div>
+    <div class="feature-item reveal">
+      <h4>Automated Reports</h4>
+      <p>Generate HTML security reports with pass/fail scoring. Export to TXT, JSON, or HTML for stakeholder reporting.</p>
+    </div>
+    <div class="feature-item reveal">
+      <h4>CIS / ISO / PCI Aligned</h4>
+      <p>Checks mapped to industry frameworks. Know exactly which controls pass and which need remediation.</p>
+    </div>
+    <div class="feature-item reveal">
+      <h4>Interactive + CLI</h4>
+      <p>Full interactive menu for exploration. Direct CLI commands for automation, CI/CD pipelines, and scripted runs.</p>
+    </div>
+  </div>
+</div>
+</section>
+
+<!-- ═══════════════ TERMINAL DEMO ═══════════════ -->
+<section>
+<div class="container">
+  <div class="section-label">In Action</div>
+  <h2 class="section-title">See It Run</h2>
+  <p class="section-desc" style="margin-bottom:32px">A taste of what KWT5H13LD looks like in your terminal.</p>
+
+  <div class="terminal reveal">
+    <div class="terminal-bar">
+      <span class="terminal-dot r"></span>
+      <span class="terminal-dot y"></span>
+      <span class="terminal-dot g"></span>
+      <span class="terminal-title">kwt5h13ld — bash — 120×40</span>
+    </div>
+    <div class="terminal-body" id="terminalOutput">
+      <div><span class="prompt">root@server:~# </span><span class="cmd">./kwt5h13ld.sh harden-linux</span></div>
+      <div class="output">&nbsp;</div>
+      <div class="info">[*] ═══════════════════════════════════════════════════════</div>
+      <div class="info">[*]   LINUX CIS BENCHMARK HARDENING ASSESSMENT</div>
+      <div class="info">[*] ═══════════════════════════════════════════════════════</div>
+      <div class="output">&nbsp;</div>
+      <div class="info">[*] 1. Filesystem Configuration</div>
+      <div class="pass">[✓]   1.1 /tmp is a separate partition</div>
+      <div class="pass">[✓]   1.2 /tmp has noexec option set</div>
+      <div class="fail">[✗]   1.3 /var is NOT a separate partition</div>
+      <div class="pass">[✓]   1.4 All world-writable directories have sticky bit</div>
+      <div class="output">&nbsp;</div>
+      <div class="info">[*] 5. Network Parameters</div>
+      <div class="pass">[✓]   IP forwarding disabled (net.ipv4.ip_forward=0)</div>
+      <div class="pass">[✓]   ICMP redirects disabled (net.ipv4.conf.all.send_redirects=0)</div>
+      <div class="pass">[✓]   SYN cookies enabled (net.ipv4.tcp_syncookies=1)</div>
+      <div class="warn">[!]   TCP timestamps not disabled — net.ipv4.tcp_timestamps=1</div>
+      <div class="output">&nbsp;</div>
+      <div class="info">[*] 7. User Account Security</div>
+      <div class="pass">[✓]   No non-root accounts with UID 0</div>
+      <div class="pass">[✓]   No accounts with empty passwords</div>
+      <div class="fail">[✗]   Direct root SSH login may be permitted</div>
+      <div class="output">&nbsp;</div>
+      <div class="info">[*] ═══════════════════════════════════════════════════════</div>
+      <div class="info">[*] Total: 22 | <span class="pass">Pass: 18</span> | <span class="fail">Fail: 4</span> | Score: 82%</div>
+    </div>
+  </div>
+</div>
+</section>
+
+<!-- ═══════════════ INSTALL ═══════════════ -->
+<section id="install">
+<div class="container">
+  <div class="section-label">Get Started</div>
+  <h2 class="section-title">Installation</h2>
+  <p class="section-desc" style="margin-bottom:32px">Up and running in under 30 seconds.</p>
+
+  <div class="install-block reveal">
+    <div class="install-step">
+      <div class="step-num">1</div>
+      <div class="step-content">
+        <strong style="color:#fff">Clone the repository</strong>
+        <code>git clone https://github.com/SiteQ8/KWT5h13ld.git</code>
+      </div>
+    </div>
+    <div class="install-step">
+      <div class="step-num">2</div>
+      <div class="step-content">
+        <strong style="color:#fff">Make it executable</strong>
+        <code>cd KWT5h13ld && chmod +x kwt5h13ld.sh</code>
+      </div>
+    </div>
+    <div class="install-step">
+      <div class="step-num">3</div>
+      <div class="step-content">
+        <strong style="color:#fff">Run the toolkit</strong>
+        <code>sudo ./kwt5h13ld.sh</code>
+      </div>
+    </div>
+    <div class="install-step" style="margin-bottom:0">
+      <div class="step-num">→</div>
+      <div class="step-content">
+        <strong style="color:#fff">Or run a specific module directly</strong>
+        <code>./kwt5h13ld.sh harden-linux -v</code>
+      </div>
+    </div>
+  </div>
+</div>
+</section>
+
+<!-- ═══════════════ TEAM ═══════════════ -->
+<section>
+<div class="container" style="text-align:center">
+  <div class="section-label" style="justify-content:center">The Team</div>
+  <h2 class="section-title">Kuwait Shield Team</h2>
+  <p class="section-desc" style="margin:0 auto 48px">Built with pride in Kuwait for the global cybersecurity community.</p>
+
+  <div class="team-card reveal">
+    <div class="team-avatar">AA</div>
+    <div class="team-info" style="text-align:left">
+      <h3>Ali AlEnezi</h3>
+      <div class="role">Founder & Lead Developer — KWT5H13LD</div>
+      <p style="color:var(--text-dim);font-size:.9rem;margin-bottom:12px">Cybersecurity practitioner specializing in security architecture, compliance frameworks, and offensive security tooling.</p>
+      <div class="team-links">
+        <a href="https://github.com/SiteQ8" target="_blank">GitHub: @SiteQ8</a>
+        <a href="mailto:Site@hotmail.com">Site@hotmail.com</a>
+      </div>
+    </div>
+  </div>
+</div>
+</section>
+
+<!-- ═══════════════ FOOTER ═══════════════ -->
+<footer>
+<div class="container">
+  <img src="../logo.png" alt="KWT5H13LD" class="footer-logo">
+  <p style="margin-bottom:8px"><strong style="color:var(--text);font-family:'Orbitron',sans-serif;letter-spacing:2px">KWT5H13LD</strong></p>
+  <p>Guarding Kuwait's Cyber Gates — Open Source Security Toolkit</p>
+  <p style="margin-top:8px"><a href="https://github.com/SiteQ8/KWT5h13ld" target="_blank">GitHub</a> · MIT License · Made in Kuwait 🇰🇼</p>
+</div>
+</footer>
+
+<script>
+// Scroll reveal
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      entry.target.classList.add('visible');
+    }
+  });
+}, { threshold: 0.1 });
+
+document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+</script>
+</body>
+</html>

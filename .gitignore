@@ -1,0 +1,8 @@
+logs/*
+!logs/.gitkeep
+reports/*
+!reports/.gitkeep
+*.swp
+*.swo
+*~
+.DS_Store
