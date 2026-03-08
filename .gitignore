@@ -1,8 +1,63 @@
-logs/*
-!logs/.gitkeep
-reports/*
-!reports/.gitkeep
+# === OS Generated Files ===
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+desktop.ini
+
+# === Editor / IDE ===
+.vscode/
+.idea/
 *.swp
 *.swo
 *~
-.DS_Store
+*.bak
+*.tmp
+.project
+.settings/
+
+# === Logs & Reports (generated at runtime) ===
+logs/*.log
+logs/*.txt
+reports/*.html
+reports/*.txt
+reports/*.json
+!logs/.gitkeep
+!reports/.gitkeep
+
+# === Runtime / Temp ===
+*.pid
+*.sock
+*.lock
+tmp/
+temp/
+
+# === Environment ===
+.env
+.env.local
+.env.*.local
+*.pem
+*.key
+*.crt
+
+# === Node (if GUI ever uses npm) ===
+node_modules/
+package-lock.json
+npm-debug.log*
+
+# === Python (if used for tooling) ===
+__pycache__/
+*.py[cod]
+*.egg-info/
+dist/
+build/
+venv/
+.venv/
+
+# === Archives ===
+*.tar.gz
+*.zip
+*.7z

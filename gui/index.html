@@ -4,446 +4,418 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>KWT5H13LD — Kuwait Shield Security Toolkit</title>
-<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;900&family=Rajdhani:wght@300;400;500;600;700&family=JetBrains+Mono:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link rel="icon" type="image/png" href="../logo.png">
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600;700&family=Outfit:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
 <style>
-*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-:root{
---bg:#050810;--surface:#0b1120;--surface2:#111827;--border:#1e2d4a;
---blue:#4a9eff;--blue-dim:#1a3a6b;--blue-glow:rgba(74,158,255,.15);
---cyan:#22d3ee;--green:#34d399;--red:#f87171;--amber:#fbbf24;
---text:#e2e8f0;--text-dim:#64748b;--text-muted:#475569;
+:root {
+  --bg-primary: #0a0e17;
+  --bg-secondary: #111827;
+  --bg-card: #1a2234;
+  --bg-card-hover: #1f2a40;
+  --accent-cyan: #06d6a0;
+  --accent-cyan-dim: rgba(6, 214, 160, 0.15);
+  --accent-blue: #118ab2;
+  --accent-red: #ef476f;
+  --accent-orange: #ffd166;
+  --accent-purple: #7b68ee;
+  --text-primary: #e8edf5;
+  --text-secondary: #8899aa;
+  --text-muted: #556677;
+  --border-color: rgba(6, 214, 160, 0.12);
+  --border-glow: rgba(6, 214, 160, 0.3);
+  --glow-cyan: 0 0 20px rgba(6, 214, 160, 0.15);
+  --radius: 12px;
+  --radius-sm: 8px;
+  --transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
-html{scroll-behavior:smooth}
-body{font-family:'Rajdhani',sans-serif;background:var(--bg);color:var(--text);overflow-x:hidden;line-height:1.6}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: 'Outfit', sans-serif; background: var(--bg-primary); color: var(--text-primary); min-height: 100vh; overflow-x: hidden; }
 
-/* Animated grid background */
-body::before{content:'';position:fixed;top:0;left:0;width:100%;height:100%;
-background:
-  linear-gradient(rgba(74,158,255,.03) 1px, transparent 1px),
-  linear-gradient(90deg, rgba(74,158,255,.03) 1px, transparent 1px);
-background-size:60px 60px;
-z-index:0;pointer-events:none;animation:gridScroll 40s linear infinite}
-@keyframes gridScroll{0%{transform:translate(0,0)}100%{transform:translate(60px,60px)}}
+.bg-grid { position: fixed; inset: 0; z-index: 0; background-image: linear-gradient(rgba(6, 214, 160, 0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(6, 214, 160, 0.03) 1px, transparent 1px); background-size: 60px 60px; animation: gridPulse 8s ease-in-out infinite; pointer-events: none; }
+@keyframes gridPulse { 0%, 100% { opacity: 0.4; } 50% { opacity: 0.8; } }
 
-/* Utility */
-.container{max-width:1280px;margin:0 auto;padding:0 24px;position:relative;z-index:1}
+.bg-orb { position: fixed; border-radius: 50%; filter: blur(100px); z-index: 0; pointer-events: none; }
+.bg-orb-1 { width: 500px; height: 500px; background: rgba(6, 214, 160, 0.06); top: -200px; right: -100px; animation: orbFloat 20s infinite; }
+.bg-orb-2 { width: 400px; height: 400px; background: rgba(17, 138, 178, 0.05); bottom: -100px; left: -100px; animation: orbFloat 25s infinite reverse; }
+.bg-orb-3 { width: 300px; height: 300px; background: rgba(123, 104, 238, 0.04); top: 50%; left: 50%; animation: orbFloat 15s infinite; }
+@keyframes orbFloat { 0%, 100% { transform: translate(0, 0) scale(1); } 25% { transform: translate(50px, -30px) scale(1.1); } 50% { transform: translate(-20px, 40px) scale(0.95); } 75% { transform: translate(30px, 20px) scale(1.05); } }
 
-/* ── HERO ── */
-.hero{min-height:100vh;display:flex;align-items:center;justify-content:center;flex-direction:column;text-align:center;position:relative}
-.hero::after{content:'';position:absolute;bottom:0;left:0;right:0;height:200px;
-background:linear-gradient(transparent,var(--bg));pointer-events:none;z-index:2}
+/* LOGIN */
+.login-screen { position: fixed; inset: 0; z-index: 1000; display: flex; align-items: center; justify-content: center; background: var(--bg-primary); transition: opacity 0.6s, transform 0.6s; }
+.login-screen.hidden { opacity: 0; transform: scale(1.05); pointer-events: none; }
+.login-container { width: 420px; max-width: 90vw; position: relative; z-index: 10; }
+.login-logo { text-align: center; margin-bottom: 40px; }
+.login-logo img { width: 80px; height: 80px; border-radius: 20px; margin-bottom: 20px; filter: drop-shadow(0 0 30px rgba(6, 214, 160, 0.3)); animation: logoPulse 3s ease-in-out infinite; }
+@keyframes logoPulse { 0%, 100% { filter: drop-shadow(0 0 20px rgba(6, 214, 160, 0.2)); transform: scale(1); } 50% { filter: drop-shadow(0 0 40px rgba(6, 214, 160, 0.4)); transform: scale(1.02); } }
+.login-logo h1 { font-family: 'JetBrains Mono', monospace; font-size: 28px; font-weight: 700; letter-spacing: 4px; color: var(--accent-cyan); }
+.login-logo p { color: var(--text-secondary); font-size: 14px; margin-top: 6px; letter-spacing: 1px; }
+.login-box { background: var(--bg-card); border: 1px solid var(--border-color); border-radius: var(--radius); padding: 36px; backdrop-filter: blur(20px); box-shadow: var(--glow-cyan); }
+.login-box h2 { font-size: 20px; font-weight: 600; margin-bottom: 6px; }
+.login-box .subtitle { color: var(--text-secondary); font-size: 13px; margin-bottom: 28px; }
+.form-group { margin-bottom: 20px; }
+.form-group label { display: block; font-size: 12px; font-weight: 500; text-transform: uppercase; letter-spacing: 1.5px; color: var(--text-secondary); margin-bottom: 8px; }
+.form-group input { width: 100%; padding: 14px 16px; background: var(--bg-primary); border: 1px solid var(--border-color); border-radius: var(--radius-sm); color: var(--text-primary); font-family: 'JetBrains Mono', monospace; font-size: 14px; transition: var(--transition); outline: none; }
+.form-group input:focus { border-color: var(--accent-cyan); box-shadow: 0 0 0 3px var(--accent-cyan-dim); }
+.form-group input::placeholder { color: var(--text-muted); }
+.login-btn { width: 100%; padding: 14px; background: linear-gradient(135deg, var(--accent-cyan), var(--accent-blue)); color: var(--bg-primary); border: none; border-radius: var(--radius-sm); font-family: 'Outfit', sans-serif; font-size: 15px; font-weight: 600; cursor: pointer; transition: var(--transition); letter-spacing: 0.5px; margin-top: 8px; }
+.login-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 30px rgba(6, 214, 160, 0.3); }
+.login-error { color: var(--accent-red); font-size: 13px; margin-top: 14px; text-align: center; min-height: 20px; opacity: 0; transition: opacity 0.3s; }
+.login-error.show { opacity: 1; }
+.demo-creds { margin-top: 24px; padding: 16px; background: rgba(6, 214, 160, 0.05); border: 1px dashed rgba(6, 214, 160, 0.2); border-radius: var(--radius-sm); text-align: center; }
+.demo-creds p { font-size: 11px; text-transform: uppercase; letter-spacing: 1.5px; color: var(--text-muted); margin-bottom: 8px; }
+.demo-creds code { font-family: 'JetBrains Mono', monospace; font-size: 13px; color: var(--accent-cyan); background: rgba(6, 214, 160, 0.08); padding: 2px 8px; border-radius: 4px; }
 
-.hero-logo{width:180px;height:180px;margin-bottom:32px;position:relative;
-animation:float 6s ease-in-out infinite;filter:drop-shadow(0 0 40px rgba(74,158,255,.3))}
-@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-12px)}}
+/* APP */
+.app { display: none; min-height: 100vh; position: relative; z-index: 1; }
+.app.visible { display: block; animation: fadeIn 0.8s ease; }
+@keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
-.hero-title{font-family:'Orbitron',sans-serif;font-size:clamp(2.5rem,6vw,5rem);font-weight:900;
-letter-spacing:6px;line-height:1.1;margin-bottom:8px;
-background:linear-gradient(135deg,#4a9eff 0%,#22d3ee 50%,#4a9eff 100%);
-background-size:200% auto;-webkit-background-clip:text;background-clip:text;color:transparent;
-animation:shimmer 3s linear infinite}
-@keyframes shimmer{0%{background-position:0% center}100%{background-position:200% center}}
+/* TOPNAV */
+.topnav { position: sticky; top: 0; z-index: 100; background: rgba(10, 14, 23, 0.85); backdrop-filter: blur(20px); border-bottom: 1px solid var(--border-color); padding: 0 32px; height: 64px; display: flex; align-items: center; justify-content: space-between; }
+.topnav-brand { display: flex; align-items: center; gap: 12px; text-decoration: none; }
+.topnav-brand img { width: 36px; height: 36px; border-radius: 8px; }
+.topnav-brand span { font-family: 'JetBrains Mono', monospace; font-weight: 700; font-size: 16px; letter-spacing: 2px; color: var(--accent-cyan); }
+.topnav-links { display: flex; align-items: center; gap: 8px; }
+.topnav-links a { color: var(--text-secondary); text-decoration: none; font-size: 13px; font-weight: 500; padding: 8px 16px; border-radius: var(--radius-sm); transition: var(--transition); }
+.topnav-links a:hover, .topnav-links a.active { color: var(--accent-cyan); background: var(--accent-cyan-dim); }
+.topnav-right { display: flex; align-items: center; gap: 16px; }
+.status-badge { display: flex; align-items: center; gap: 6px; font-size: 12px; color: var(--accent-cyan); background: var(--accent-cyan-dim); padding: 6px 14px; border-radius: 20px; font-weight: 500; }
+.status-dot { width: 6px; height: 6px; background: var(--accent-cyan); border-radius: 50%; animation: pulse 2s infinite; }
+@keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
+.user-avatar { width: 36px; height: 36px; border-radius: 50%; background: linear-gradient(135deg, var(--accent-cyan), var(--accent-blue)); display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 14px; color: var(--bg-primary); }
+.logout-btn { background: none; border: 1px solid rgba(239, 71, 111, 0.3); color: var(--accent-red); padding: 6px 14px; border-radius: var(--radius-sm); font-size: 12px; font-weight: 500; cursor: pointer; transition: var(--transition); font-family: 'Outfit', sans-serif; }
+.logout-btn:hover { background: rgba(239, 71, 111, 0.1); border-color: var(--accent-red); }
 
-.hero-subtitle{font-family:'Orbitron',sans-serif;font-size:clamp(.9rem,2vw,1.2rem);
-letter-spacing:8px;text-transform:uppercase;color:var(--blue);opacity:.8;margin-bottom:32px}
+/* HERO */
+.hero { padding: 80px 32px 60px; text-align: center; }
+.hero-badge { display: inline-flex; align-items: center; gap: 8px; padding: 8px 20px; background: var(--accent-cyan-dim); border: 1px solid rgba(6, 214, 160, 0.2); border-radius: 30px; font-size: 12px; color: var(--accent-cyan); font-weight: 500; letter-spacing: 1px; text-transform: uppercase; margin-bottom: 24px; }
+.hero h1 { font-family: 'JetBrains Mono', monospace; font-size: clamp(36px, 6vw, 64px); font-weight: 800; letter-spacing: 6px; background: linear-gradient(135deg, var(--accent-cyan) 0%, #fff 40%, var(--accent-cyan) 100%); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; line-height: 1.1; margin-bottom: 16px; }
+.hero .tagline { font-size: 18px; color: var(--text-secondary); font-weight: 300; letter-spacing: 2px; margin-bottom: 40px; }
+.hero-actions { display: flex; gap: 16px; justify-content: center; flex-wrap: wrap; }
+.btn { display: inline-flex; align-items: center; gap: 8px; padding: 14px 28px; border-radius: var(--radius-sm); font-family: 'Outfit', sans-serif; font-size: 14px; font-weight: 600; text-decoration: none; transition: var(--transition); cursor: pointer; border: none; }
+.btn-primary { background: linear-gradient(135deg, var(--accent-cyan), var(--accent-blue)); color: var(--bg-primary); }
+.btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 30px rgba(6, 214, 160, 0.3); }
+.btn-outline { background: transparent; border: 1px solid var(--border-color); color: var(--text-primary); }
+.btn-outline:hover { border-color: var(--accent-cyan); color: var(--accent-cyan); background: var(--accent-cyan-dim); }
 
-.hero-desc{max-width:650px;font-size:1.15rem;color:var(--text-dim);font-weight:400;margin-bottom:40px;line-height:1.8}
+/* STATS */
+.stats-strip { display: flex; justify-content: center; gap: 48px; padding: 40px 32px; flex-wrap: wrap; }
+.stat-item { text-align: center; }
+.stat-number { font-family: 'JetBrains Mono', monospace; font-size: 40px; font-weight: 700; color: var(--accent-cyan); line-height: 1; }
+.stat-label { font-size: 12px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 2px; margin-top: 8px; }
 
-.hero-badges{display:flex;gap:12px;flex-wrap:wrap;justify-content:center;margin-bottom:48px}
-.badge{display:inline-flex;align-items:center;gap:6px;padding:6px 16px;
-border-radius:999px;font-family:'JetBrains Mono',monospace;font-size:.75rem;font-weight:500;
-border:1px solid var(--border);background:var(--surface);color:var(--text-dim)}
-.badge .dot{width:6px;height:6px;border-radius:50%;background:var(--green);
-animation:pulse 2s ease-in-out infinite}
-@keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
+/* SECTIONS */
+.section { padding: 60px 32px; max-width: 1280px; margin: 0 auto; }
+.section-header { text-align: center; margin-bottom: 48px; }
+.section-header .overline { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 3px; color: var(--accent-cyan); margin-bottom: 8px; }
+.section-header h2 { font-size: 32px; font-weight: 700; margin-bottom: 12px; }
+.section-header p { color: var(--text-secondary); font-size: 15px; max-width: 600px; margin: 0 auto; }
 
-.hero-cta{display:flex;gap:16px;flex-wrap:wrap;justify-content:center}
-.btn{display:inline-flex;align-items:center;gap:8px;padding:14px 32px;border-radius:8px;
-font-family:'Orbitron',sans-serif;font-size:.85rem;font-weight:600;letter-spacing:2px;
-text-decoration:none;text-transform:uppercase;transition:all .3s;cursor:pointer;border:none}
-.btn-primary{background:linear-gradient(135deg,var(--blue),#2563eb);color:#fff;
-box-shadow:0 0 30px rgba(74,158,255,.25)}
-.btn-primary:hover{box-shadow:0 0 50px rgba(74,158,255,.4);transform:translateY(-2px)}
-.btn-ghost{background:transparent;color:var(--blue);border:1px solid var(--border)}
-.btn-ghost:hover{border-color:var(--blue);background:var(--blue-glow)}
+/* MODULES GRID */
+.modules-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(360px, 1fr)); gap: 20px; }
+.module-card { background: var(--bg-card); border: 1px solid var(--border-color); border-radius: var(--radius); padding: 28px; transition: var(--transition); position: relative; overflow: hidden; }
+.module-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px; background: linear-gradient(90deg, transparent, var(--accent-cyan), transparent); opacity: 0; transition: var(--transition); }
+.module-card:hover { border-color: var(--border-glow); transform: translateY(-4px); box-shadow: var(--glow-cyan); }
+.module-card:hover::before { opacity: 1; }
+.module-icon { width: 48px; height: 48px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 22px; margin-bottom: 16px; background: var(--accent-cyan-dim); }
+.module-card h3 { font-size: 17px; font-weight: 600; margin-bottom: 8px; }
+.module-card p { font-size: 13px; color: var(--text-secondary); line-height: 1.6; margin-bottom: 16px; }
+.module-tags { display: flex; flex-wrap: wrap; gap: 6px; }
+.module-tags span { font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; padding: 4px 10px; border-radius: 4px; background: rgba(6, 214, 160, 0.06); color: var(--text-muted); border: 1px solid rgba(6, 214, 160, 0.08); }
 
-/* ── SECTION ── */
-section{padding:100px 0;position:relative;z-index:1}
-.section-label{font-family:'JetBrains Mono',monospace;font-size:.75rem;letter-spacing:4px;
-text-transform:uppercase;color:var(--blue);margin-bottom:8px;display:flex;align-items:center;gap:12px}
-.section-label::before{content:'';width:40px;height:1px;background:var(--blue)}
-.section-title{font-family:'Orbitron',sans-serif;font-size:clamp(1.6rem,3.5vw,2.8rem);
-font-weight:700;margin-bottom:16px;color:#fff}
-.section-desc{max-width:600px;color:var(--text-dim);font-size:1.05rem;margin-bottom:48px}
+/* DASHBOARD */
+.dashboard-grid { display: grid; grid-template-columns: 2fr 1fr; gap: 20px; margin-bottom: 20px; }
+.dash-card { background: var(--bg-card); border: 1px solid var(--border-color); border-radius: var(--radius); padding: 24px; }
+.dash-card-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; }
+.dash-card-header h3 { font-size: 14px; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; }
+.badge { font-size: 11px; padding: 4px 10px; border-radius: 12px; font-weight: 600; }
+.badge-green { background: rgba(6, 214, 160, 0.12); color: var(--accent-cyan); }
+.scan-table { width: 100%; border-collapse: collapse; }
+.scan-table th { text-align: left; font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 1.5px; color: var(--text-muted); padding: 10px 12px; border-bottom: 1px solid var(--border-color); }
+.scan-table td { padding: 12px; font-size: 13px; border-bottom: 1px solid rgba(255,255,255,0.03); }
+.scan-table tr:hover td { background: rgba(6, 214, 160, 0.03); }
+.severity-badge { display: inline-block; font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; padding: 3px 8px; border-radius: 4px; }
+.sev-critical { background: rgba(239, 71, 111, 0.15); color: var(--accent-red); }
+.sev-high { background: rgba(255, 150, 50, 0.15); color: #ff9632; }
+.sev-medium { background: rgba(255, 209, 102, 0.15); color: var(--accent-orange); }
+.sev-low { background: rgba(6, 214, 160, 0.15); color: var(--accent-cyan); }
+.sev-pass { background: rgba(6, 214, 160, 0.1); color: var(--accent-cyan); }
 
-/* ── MODULES GRID ── */
-.modules-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(340px,1fr));gap:20px}
-.module-card{background:var(--surface);border:1px solid var(--border);border-radius:12px;
-padding:28px;position:relative;overflow:hidden;transition:all .4s;cursor:default}
-.module-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;
-background:linear-gradient(90deg,transparent,var(--blue),transparent);opacity:0;transition:opacity .4s}
-.module-card:hover{border-color:var(--blue-dim);transform:translateY(-4px);
-box-shadow:0 12px 40px rgba(0,0,0,.4)}
-.module-card:hover::before{opacity:1}
+.gauge-circle { width: 160px; height: 160px; border-radius: 50%; margin: 0 auto 20px; position: relative; background: conic-gradient(var(--accent-cyan) 0deg 198deg, var(--accent-orange) 198deg 252deg, var(--accent-red) 252deg 288deg, rgba(255,255,255,0.05) 288deg 360deg); display: flex; align-items: center; justify-content: center; }
+.gauge-circle::before { content: ''; width: 120px; height: 120px; border-radius: 50%; background: var(--bg-card); position: absolute; }
+.gauge-score { position: relative; z-index: 2; font-family: 'JetBrains Mono', monospace; font-size: 36px; font-weight: 700; color: var(--accent-cyan); }
+.gauge-label { font-size: 13px; color: var(--text-secondary); margin-bottom: 16px; text-align: center; }
+.threat-breakdown { display: flex; justify-content: center; gap: 20px; flex-wrap: wrap; }
+.threat-item { text-align: center; }
+.threat-item .count { font-family: 'JetBrains Mono', monospace; font-size: 20px; font-weight: 700; }
+.threat-item .label { font-size: 10px; text-transform: uppercase; letter-spacing: 1px; color: var(--text-muted); margin-top: 2px; }
 
-.module-icon{width:48px;height:48px;border-radius:10px;display:flex;align-items:center;justify-content:center;
-margin-bottom:16px;font-size:1.4rem;background:var(--blue-glow);border:1px solid var(--blue-dim)}
-.module-card h3{font-family:'Orbitron',sans-serif;font-size:1rem;font-weight:600;
-margin-bottom:8px;color:#fff;letter-spacing:1px}
-.module-card p{color:var(--text-dim);font-size:.9rem;line-height:1.6;margin-bottom:16px}
-.module-tags{display:flex;gap:6px;flex-wrap:wrap}
-.tag{padding:3px 10px;border-radius:4px;font-family:'JetBrains Mono',monospace;
-font-size:.65rem;background:var(--surface2);border:1px solid var(--border);color:var(--text-muted)}
+/* TERMINAL */
+.terminal-window { background: #0d1117; border: 1px solid rgba(255,255,255,0.08); border-radius: var(--radius); overflow: hidden; max-width: 800px; margin: 0 auto; box-shadow: 0 20px 60px rgba(0,0,0,0.5); }
+.terminal-titlebar { display: flex; align-items: center; gap: 8px; padding: 12px 16px; background: rgba(255,255,255,0.03); border-bottom: 1px solid rgba(255,255,255,0.06); }
+.terminal-dot { width: 12px; height: 12px; border-radius: 50%; }
+.dot-red { background: #ff5f57; } .dot-yellow { background: #febc2e; } .dot-green { background: #28c840; }
+.terminal-title { flex: 1; text-align: center; font-family: 'JetBrains Mono', monospace; font-size: 12px; color: var(--text-muted); }
+.terminal-body { padding: 24px; font-family: 'JetBrains Mono', monospace; font-size: 13px; line-height: 1.8; min-height: 300px; overflow-y: auto; max-height: 500px; }
+.term-prompt { color: var(--accent-cyan); } .term-command { color: #e8edf5; } .term-comment { color: #556677; }
+.term-success { color: #28c840; } .term-fail { color: var(--accent-red); } .term-warn { color: var(--accent-orange); }
+.term-info { color: var(--accent-blue); } .term-header { color: var(--accent-purple); font-weight: 700; }
 
-/* ── FEATURES ── */
-.features-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:24px;margin-top:48px}
-.feature-item{padding:24px;border-left:2px solid var(--border);transition:border-color .3s}
-.feature-item:hover{border-left-color:var(--blue)}
-.feature-item h4{font-family:'Orbitron',sans-serif;font-size:.85rem;font-weight:600;
-color:#fff;margin-bottom:8px;letter-spacing:1px}
-.feature-item p{color:var(--text-dim);font-size:.88rem}
+/* FEATURES */
+.features-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 16px; }
+.feature-card { padding: 28px; background: var(--bg-card); border: 1px solid var(--border-color); border-radius: var(--radius); transition: var(--transition); }
+.feature-card:hover { border-color: var(--border-glow); }
+.feature-icon { font-size: 28px; margin-bottom: 16px; }
+.feature-card h4 { font-size: 15px; font-weight: 600; margin-bottom: 8px; }
+.feature-card p { font-size: 13px; color: var(--text-secondary); line-height: 1.6; }
 
-/* ── TERMINAL DEMO ── */
-.terminal{background:#0d1117;border:1px solid var(--border);border-radius:12px;overflow:hidden;
-max-width:800px;margin:0 auto;box-shadow:0 20px 60px rgba(0,0,0,.5)}
-.terminal-bar{display:flex;align-items:center;gap:8px;padding:12px 16px;background:#161b22;border-bottom:1px solid var(--border)}
-.terminal-dot{width:12px;height:12px;border-radius:50%}
-.terminal-dot.r{background:#f85149}.terminal-dot.y{background:#fbbf24}.terminal-dot.g{background:#34d399}
-.terminal-title{flex:1;text-align:center;font-family:'JetBrains Mono',monospace;font-size:.7rem;color:var(--text-muted)}
-.terminal-body{padding:24px;font-family:'JetBrains Mono',monospace;font-size:.8rem;line-height:2;overflow-x:auto}
-.terminal-body .prompt{color:var(--green)}
-.terminal-body .cmd{color:#fff}
-.terminal-body .output{color:var(--text-dim)}
-.terminal-body .pass{color:var(--green)}
-.terminal-body .fail{color:var(--red)}
-.terminal-body .info{color:var(--blue)}
-.terminal-body .warn{color:var(--amber)}
+/* INSTALL */
+.install-steps { max-width: 700px; margin: 0 auto; }
+.install-step { display: flex; gap: 20px; padding: 20px 0; border-bottom: 1px solid rgba(255,255,255,0.04); }
+.step-num { width: 40px; height: 40px; min-width: 40px; border-radius: 50%; background: var(--accent-cyan-dim); border: 1px solid rgba(6, 214, 160, 0.2); display: flex; align-items: center; justify-content: center; font-family: 'JetBrains Mono', monospace; font-weight: 700; font-size: 14px; color: var(--accent-cyan); }
+.step-content h4 { font-size: 15px; margin-bottom: 8px; }
+.step-content code { display: inline-block; font-family: 'JetBrains Mono', monospace; font-size: 13px; background: var(--bg-primary); padding: 8px 16px; border-radius: var(--radius-sm); border: 1px solid var(--border-color); color: var(--accent-cyan); margin-top: 4px; }
 
-/* ── STATS ── */
-.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:20px;margin:48px 0}
-.stat{text-align:center;padding:32px 16px;background:var(--surface);border:1px solid var(--border);border-radius:12px}
-.stat-num{font-family:'Orbitron',sans-serif;font-size:clamp(2rem,4vw,3.2rem);font-weight:900;
-background:linear-gradient(135deg,var(--blue),var(--cyan));-webkit-background-clip:text;background-clip:text;color:transparent}
-.stat-label{font-size:.85rem;color:var(--text-dim);margin-top:4px;letter-spacing:1px}
+/* TEAM */
+.team-card { max-width: 500px; margin: 0 auto; text-align: center; background: var(--bg-card); border: 1px solid var(--border-color); border-radius: var(--radius); padding: 40px; }
+.team-avatar { width: 80px; height: 80px; border-radius: 50%; background: linear-gradient(135deg, var(--accent-cyan), var(--accent-blue)); display: flex; align-items: center; justify-content: center; margin: 0 auto 20px; font-size: 28px; font-weight: 800; color: var(--bg-primary); }
+.team-card h3 { font-size: 20px; margin-bottom: 4px; }
+.team-card .role { color: var(--text-secondary); font-size: 14px; margin-bottom: 16px; }
+.team-card .bio { color: var(--text-secondary); font-size: 13px; line-height: 1.6; margin-bottom: 20px; }
+.team-links { display: flex; gap: 12px; justify-content: center; }
+.team-links a { color: var(--text-secondary); text-decoration: none; font-size: 13px; padding: 6px 14px; border: 1px solid var(--border-color); border-radius: var(--radius-sm); transition: var(--transition); }
+.team-links a:hover { color: var(--accent-cyan); border-color: var(--accent-cyan); }
 
-/* ── TEAM ── */
-.team-card{display:flex;align-items:center;gap:32px;padding:40px;
-background:var(--surface);border:1px solid var(--border);border-radius:16px;
-max-width:700px;margin:0 auto}
-.team-avatar{width:100px;height:100px;border-radius:50%;border:3px solid var(--blue-dim);
-display:flex;align-items:center;justify-content:center;font-family:'Orbitron',sans-serif;
-font-size:2rem;font-weight:900;background:var(--blue-glow);color:var(--blue);flex-shrink:0}
-.team-info h3{font-family:'Orbitron',sans-serif;font-size:1.2rem;color:#fff;margin-bottom:4px}
-.team-info .role{color:var(--blue);font-size:.9rem;margin-bottom:12px}
-.team-links{display:flex;gap:12px}
-.team-links a{color:var(--text-dim);text-decoration:none;font-family:'JetBrains Mono',monospace;
-font-size:.8rem;padding:4px 12px;border:1px solid var(--border);border-radius:6px;transition:all .3s}
-.team-links a:hover{border-color:var(--blue);color:var(--blue)}
+/* FOOTER */
+.footer { border-top: 1px solid var(--border-color); padding: 40px 32px; text-align: center; }
+.footer-brand { display: flex; align-items: center; justify-content: center; gap: 10px; margin-bottom: 12px; }
+.footer-brand img { width: 28px; height: 28px; border-radius: 6px; }
+.footer-brand span { font-family: 'JetBrains Mono', monospace; font-weight: 700; font-size: 14px; color: var(--accent-cyan); letter-spacing: 2px; }
+.footer p { color: var(--text-muted); font-size: 12px; }
+.footer-links { display: flex; gap: 16px; justify-content: center; margin-top: 12px; }
+.footer-links a { color: var(--text-muted); text-decoration: none; font-size: 12px; transition: var(--transition); }
+.footer-links a:hover { color: var(--accent-cyan); }
 
-/* ── INSTALL ── */
-.install-block{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:32px;
-max-width:700px;margin:0 auto}
-.install-step{display:flex;gap:16px;margin-bottom:24px}
-.step-num{width:32px;height:32px;border-radius:50%;background:var(--blue-glow);border:1px solid var(--blue-dim);
-display:flex;align-items:center;justify-content:center;font-family:'Orbitron',sans-serif;
-font-size:.75rem;font-weight:700;color:var(--blue);flex-shrink:0}
-.step-content code{display:block;margin-top:8px;padding:12px 16px;background:#0d1117;
-border-radius:6px;font-family:'JetBrains Mono',monospace;font-size:.8rem;color:var(--cyan);
-border:1px solid var(--border);overflow-x:auto}
+.fade-up { opacity: 0; transform: translateY(30px); transition: opacity 0.6s ease, transform 0.6s ease; }
+.fade-up.visible { opacity: 1; transform: translateY(0); }
+.tab-content { display: none; }
+.tab-content.active { display: block; }
 
-/* ── FOOTER ── */
-footer{padding:60px 0 40px;border-top:1px solid var(--border);text-align:center;position:relative;z-index:1}
-footer p{color:var(--text-muted);font-size:.85rem}
-footer .footer-logo{width:48px;opacity:.5;margin-bottom:16px}
-footer a{color:var(--blue);text-decoration:none}
-
-/* ── RESPONSIVE ── */
-@media(max-width:768px){
-.modules-grid{grid-template-columns:1fr}
-.stats{grid-template-columns:repeat(2,1fr)}
-.team-card{flex-direction:column;text-align:center}
-.team-links{justify-content:center}
-.features-row{grid-template-columns:1fr}
-}
-
-/* Scroll animations */
-.reveal{opacity:0;transform:translateY(30px);transition:all .8s cubic-bezier(.16,1,.3,1)}
-.reveal.visible{opacity:1;transform:translateY(0)}
+@media (max-width: 900px) { .dashboard-grid { grid-template-columns: 1fr; } .topnav-links { display: none; } .modules-grid { grid-template-columns: 1fr; } }
+@media (max-width: 600px) { .hero { padding: 40px 16px 30px; } .section { padding: 40px 16px; } .topnav { padding: 0 16px; } .login-box { padding: 24px; } }
 </style>
 </head>
 <body>
+<div class="bg-grid"></div>
+<div class="bg-orb bg-orb-1"></div>
+<div class="bg-orb bg-orb-2"></div>
+<div class="bg-orb bg-orb-3"></div>
 
-<!-- ═══════════════ HERO ═══════════════ -->
-<section class="hero">
-<div class="container">
-  <img src="../logo.png" alt="KWT5H13LD" class="hero-logo" id="logo">
-  <h1 class="hero-title">KWT5H13LD</h1>
-  <p class="hero-subtitle">Guarding Kuwait's Cyber Gates</p>
-  <p class="hero-desc">An open-source blue team security toolkit built to protect, audit, and harden your infrastructure. One tool for everything — from cloud misconfiguration detection to incident response.</p>
-  <div class="hero-badges">
-    <span class="badge"><span class="dot"></span> Open Source</span>
-    <span class="badge">v1.0.0</span>
-    <span class="badge">Bash / Shell</span>
-    <span class="badge">Blue Team</span>
-    <span class="badge">Made in Kuwait 🇰🇼</span>
-  </div>
-  <div class="hero-cta">
-    <a href="https://github.com/SiteQ8/KWT5h13ld" class="btn btn-primary" target="_blank">★ Star on GitHub</a>
-    <a href="#install" class="btn btn-ghost">Quick Install →</a>
-  </div>
-</div>
-</section>
-
-<!-- ═══════════════ STATS ═══════════════ -->
-<section>
-<div class="container">
-  <div class="stats reveal">
-    <div class="stat"><div class="stat-num">30+</div><div class="stat-label">Security Modules</div></div>
-    <div class="stat"><div class="stat-num">9</div><div class="stat-label">Categories</div></div>
-    <div class="stat"><div class="stat-num">200+</div><div class="stat-label">Security Checks</div></div>
-    <div class="stat"><div class="stat-num">0</div><div class="stat-label">Dependencies Required</div></div>
-  </div>
-</div>
-</section>
-
-<!-- ═══════════════ MODULES ═══════════════ -->
-<section id="modules">
-<div class="container">
-  <div class="section-label">Arsenal</div>
-  <h2 class="section-title">Security Modules</h2>
-  <p class="section-desc">Every module you need to secure, audit, and defend your infrastructure — all in one toolkit.</p>
-
-  <div class="modules-grid">
-    <div class="module-card reveal">
-      <div class="module-icon">☁️</div>
-      <h3>Cloud Security Audit</h3>
-      <p>Detect public S3 buckets, open security groups, misconfigured IAM policies, unencrypted storage, and exposed cloud services across AWS, Azure, and GCP.</p>
-      <div class="module-tags"><span class="tag">AWS</span><span class="tag">Azure</span><span class="tag">GCP</span><span class="tag">IAM</span><span class="tag">Storage</span></div>
+<!-- LOGIN -->
+<div class="login-screen" id="loginScreen">
+  <div class="login-container">
+    <div class="login-logo">
+      <img src="../logo.png" alt="KWT5H13LD">
+      <h1>KWT5H13LD</h1>
+      <p>Guarding Kuwait's Cyber Gates</p>
     </div>
-
-    <div class="module-card reveal">
-      <div class="module-icon">🛡️</div>
-      <h3>System Hardening</h3>
-      <p>Run CIS benchmark checks on Linux systems — filesystem configuration, kernel parameters, SSH hardening, service enumeration, and user account security.</p>
-      <div class="module-tags"><span class="tag">CIS</span><span class="tag">SSH</span><span class="tag">Kernel</span><span class="tag">sysctl</span><span class="tag">Services</span></div>
-    </div>
-
-    <div class="module-card reveal">
-      <div class="module-icon">🌐</div>
-      <h3>Network Defense</h3>
-      <p>Network discovery, firewall rule auditing, DNS security assessment (DNSSEC, zone transfers, SPF/DMARC), and TLS/SSL certificate & cipher validation.</p>
-      <div class="module-tags"><span class="tag">Firewall</span><span class="tag">DNS</span><span class="tag">TLS</span><span class="tag">nmap</span><span class="tag">Ports</span></div>
-    </div>
-
-    <div class="module-card reveal">
-      <div class="module-icon">🔍</div>
-      <h3>Vulnerability Assessment</h3>
-      <p>System CVE scanning, web application security header checks, SUID/SGID binary detection, and dependency vulnerability auditing for npm, pip, and system packages.</p>
-      <div class="module-tags"><span class="tag">CVE</span><span class="tag">Web Headers</span><span class="tag">SUID</span><span class="tag">npm</span><span class="tag">Trivy</span></div>
-    </div>
-
-    <div class="module-card reveal">
-      <div class="module-icon">📋</div>
-      <h3>Compliance & Policy</h3>
-      <p>Automated checks against CIS Controls v8, ISO 27001 Annex A, PCI DSS v4.0, and password policy auditing with PAM and login.defs validation.</p>
-      <div class="module-tags"><span class="tag">CIS v8</span><span class="tag">ISO 27001</span><span class="tag">PCI DSS</span><span class="tag">Password</span></div>
-    </div>
-
-    <div class="module-card reveal">
-      <div class="module-icon">📊</div>
-      <h3>Log Analysis</h3>
-      <p>Authentication log analysis with brute force detection, syslog anomaly pattern detection, and auditd log review for suspicious system calls and file access.</p>
-      <div class="module-tags"><span class="tag">auth.log</span><span class="tag">syslog</span><span class="tag">auditd</span><span class="tag">Brute Force</span></div>
-    </div>
-
-    <div class="module-card reveal">
-      <div class="module-icon">🚨</div>
-      <h3>Incident Response</h3>
-      <p>Forensic system state snapshots, running process anomaly detection, active connection investigation, and persistence mechanism scanning (cron, systemd, profiles).</p>
-      <div class="module-tags"><span class="tag">Forensics</span><span class="tag">Processes</span><span class="tag">Connections</span><span class="tag">Persistence</span></div>
-    </div>
-
-    <div class="module-card reveal">
-      <div class="module-icon">🐳</div>
-      <h3>Container Security</h3>
-      <p>Docker CIS Benchmark auditing, Kubernetes cluster security assessment, container image vulnerability scanning, and privilege escalation detection.</p>
-      <div class="module-tags"><span class="tag">Docker</span><span class="tag">K8s</span><span class="tag">Images</span><span class="tag">Trivy</span><span class="tag">RBAC</span></div>
-    </div>
-
-    <div class="module-card reveal">
-      <div class="module-icon">📦</div>
-      <h3>Asset Inventory</h3>
-      <p>Full system asset and software inventory collection with hardware profiling, and port-to-service mapping for complete infrastructure visibility.</p>
-      <div class="module-tags"><span class="tag">Hardware</span><span class="tag">Software</span><span class="tag">Ports</span><span class="tag">Services</span></div>
-    </div>
-  </div>
-</div>
-</section>
-
-<!-- ═══════════════ FEATURES ═══════════════ -->
-<section>
-<div class="container">
-  <div class="section-label">Why KWT5H13LD</div>
-  <h2 class="section-title">Built for Defenders</h2>
-  <p class="section-desc">Designed by security practitioners for security practitioners. No fluff — just the tools you need.</p>
-
-  <div class="features-row">
-    <div class="feature-item reveal">
-      <h4>Zero Dependencies</h4>
-      <p>Runs on pure bash. Uses system tools already on your servers. No Python, no Ruby, no Node — just shell.</p>
-    </div>
-    <div class="feature-item reveal">
-      <h4>Modular Architecture</h4>
-      <p>Load only what you need. Each module is self-contained and independently executable via CLI or interactive menu.</p>
-    </div>
-    <div class="feature-item reveal">
-      <h4>Multi-Cloud Ready</h4>
-      <p>Supports AWS, Azure, and GCP with native CLI integration for cloud security auditing and IAM review.</p>
-    </div>
-    <div class="feature-item reveal">
-      <h4>Automated Reports</h4>
-      <p>Generate HTML security reports with pass/fail scoring. Export to TXT, JSON, or HTML for stakeholder reporting.</p>
-    </div>
-    <div class="feature-item reveal">
-      <h4>CIS / ISO / PCI Aligned</h4>
-      <p>Checks mapped to industry frameworks. Know exactly which controls pass and which need remediation.</p>
-    </div>
-    <div class="feature-item reveal">
-      <h4>Interactive + CLI</h4>
-      <p>Full interactive menu for exploration. Direct CLI commands for automation, CI/CD pipelines, and scripted runs.</p>
-    </div>
-  </div>
-</div>
-</section>
-
-<!-- ═══════════════ TERMINAL DEMO ═══════════════ -->
-<section>
-<div class="container">
-  <div class="section-label">In Action</div>
-  <h2 class="section-title">See It Run</h2>
-  <p class="section-desc" style="margin-bottom:32px">A taste of what KWT5H13LD looks like in your terminal.</p>
-
-  <div class="terminal reveal">
-    <div class="terminal-bar">
-      <span class="terminal-dot r"></span>
-      <span class="terminal-dot y"></span>
-      <span class="terminal-dot g"></span>
-      <span class="terminal-title">kwt5h13ld — bash — 120×40</span>
-    </div>
-    <div class="terminal-body" id="terminalOutput">
-      <div><span class="prompt">root@server:~# </span><span class="cmd">./kwt5h13ld.sh harden-linux</span></div>
-      <div class="output">&nbsp;</div>
-      <div class="info">[*] ═══════════════════════════════════════════════════════</div>
-      <div class="info">[*]   LINUX CIS BENCHMARK HARDENING ASSESSMENT</div>
-      <div class="info">[*] ═══════════════════════════════════════════════════════</div>
-      <div class="output">&nbsp;</div>
-      <div class="info">[*] 1. Filesystem Configuration</div>
-      <div class="pass">[✓]   1.1 /tmp is a separate partition</div>
-      <div class="pass">[✓]   1.2 /tmp has noexec option set</div>
-      <div class="fail">[✗]   1.3 /var is NOT a separate partition</div>
-      <div class="pass">[✓]   1.4 All world-writable directories have sticky bit</div>
-      <div class="output">&nbsp;</div>
-      <div class="info">[*] 5. Network Parameters</div>
-      <div class="pass">[✓]   IP forwarding disabled (net.ipv4.ip_forward=0)</div>
-      <div class="pass">[✓]   ICMP redirects disabled (net.ipv4.conf.all.send_redirects=0)</div>
-      <div class="pass">[✓]   SYN cookies enabled (net.ipv4.tcp_syncookies=1)</div>
-      <div class="warn">[!]   TCP timestamps not disabled — net.ipv4.tcp_timestamps=1</div>
-      <div class="output">&nbsp;</div>
-      <div class="info">[*] 7. User Account Security</div>
-      <div class="pass">[✓]   No non-root accounts with UID 0</div>
-      <div class="pass">[✓]   No accounts with empty passwords</div>
-      <div class="fail">[✗]   Direct root SSH login may be permitted</div>
-      <div class="output">&nbsp;</div>
-      <div class="info">[*] ═══════════════════════════════════════════════════════</div>
-      <div class="info">[*] Total: 22 | <span class="pass">Pass: 18</span> | <span class="fail">Fail: 4</span> | Score: 82%</div>
-    </div>
-  </div>
-</div>
-</section>
-
-<!-- ═══════════════ INSTALL ═══════════════ -->
-<section id="install">
-<div class="container">
-  <div class="section-label">Get Started</div>
-  <h2 class="section-title">Installation</h2>
-  <p class="section-desc" style="margin-bottom:32px">Up and running in under 30 seconds.</p>
-
-  <div class="install-block reveal">
-    <div class="install-step">
-      <div class="step-num">1</div>
-      <div class="step-content">
-        <strong style="color:#fff">Clone the repository</strong>
-        <code>git clone https://github.com/SiteQ8/KWT5h13ld.git</code>
+    <div class="login-box">
+      <h2>Sign In</h2>
+      <p class="subtitle">Access the Kuwait Shield Security Dashboard</p>
+      <div class="form-group">
+        <label>Username</label>
+        <input type="text" id="loginUser" placeholder="Enter username" autocomplete="off">
       </div>
-    </div>
-    <div class="install-step">
-      <div class="step-num">2</div>
-      <div class="step-content">
-        <strong style="color:#fff">Make it executable</strong>
-        <code>cd KWT5h13ld && chmod +x kwt5h13ld.sh</code>
+      <div class="form-group">
+        <label>Password</label>
+        <input type="password" id="loginPass" placeholder="Enter password" autocomplete="off">
       </div>
-    </div>
-    <div class="install-step">
-      <div class="step-num">3</div>
-      <div class="step-content">
-        <strong style="color:#fff">Run the toolkit</strong>
-        <code>sudo ./kwt5h13ld.sh</code>
-      </div>
-    </div>
-    <div class="install-step" style="margin-bottom:0">
-      <div class="step-num">→</div>
-      <div class="step-content">
-        <strong style="color:#fff">Or run a specific module directly</strong>
-        <code>./kwt5h13ld.sh harden-linux -v</code>
+      <button class="login-btn" onclick="handleLogin()">Access Dashboard →</button>
+      <div class="login-error" id="loginError">Invalid credentials. Please try again.</div>
+      <div class="demo-creds">
+        <p>Demo Credentials</p>
+        <div style="margin-top:6px;"><code>admin</code> &nbsp;/&nbsp; <code>password</code></div>
       </div>
     </div>
   </div>
 </div>
-</section>
 
-<!-- ═══════════════ TEAM ═══════════════ -->
-<section>
-<div class="container" style="text-align:center">
-  <div class="section-label" style="justify-content:center">The Team</div>
-  <h2 class="section-title">Kuwait Shield Team</h2>
-  <p class="section-desc" style="margin:0 auto 48px">Built with pride in Kuwait for the global cybersecurity community.</p>
-
-  <div class="team-card reveal">
-    <div class="team-avatar">AA</div>
-    <div class="team-info" style="text-align:left">
-      <h3>Ali AlEnezi</h3>
-      <div class="role">Founder & Lead Developer — KWT5H13LD</div>
-      <p style="color:var(--text-dim);font-size:.9rem;margin-bottom:12px">Cybersecurity practitioner specializing in security architecture, compliance frameworks, and offensive security tooling.</p>
-      <div class="team-links">
-        <a href="https://github.com/SiteQ8" target="_blank">GitHub: @SiteQ8</a>
-        <a href="mailto:Site@hotmail.com">Site@hotmail.com</a>
-      </div>
+<!-- MAIN APP -->
+<div class="app" id="mainApp">
+  <nav class="topnav">
+    <a class="topnav-brand" href="#">
+      <img src="../logo.png" alt="KWT5H13LD"><span>KWT5H13LD</span>
+    </a>
+    <div class="topnav-links">
+      <a href="#" class="active" onclick="switchTab('overview',this)">Overview</a>
+      <a href="#" onclick="switchTab('modules',this)">Modules</a>
+      <a href="#" onclick="switchTab('dashboard',this)">Dashboard</a>
+      <a href="#" onclick="switchTab('terminal',this)">Terminal</a>
+      <a href="#" onclick="switchTab('install',this)">Install</a>
     </div>
-  </div>
-</div>
-</section>
+    <div class="topnav-right">
+      <div class="status-badge"><span class="status-dot"></span>All Systems Secure</div>
+      <div class="user-avatar">A</div>
+      <button class="logout-btn" onclick="handleLogout()">Logout</button>
+    </div>
+  </nav>
 
-<!-- ═══════════════ FOOTER ═══════════════ -->
-<footer>
-<div class="container">
-  <img src="../logo.png" alt="KWT5H13LD" class="footer-logo">
-  <p style="margin-bottom:8px"><strong style="color:var(--text);font-family:'Orbitron',sans-serif;letter-spacing:2px">KWT5H13LD</strong></p>
-  <p>Guarding Kuwait's Cyber Gates — Open Source Security Toolkit</p>
-  <p style="margin-top:8px"><a href="https://github.com/SiteQ8/KWT5h13ld" target="_blank">GitHub</a> · MIT License · Made in Kuwait 🇰🇼</p>
+  <!-- OVERVIEW -->
+  <div class="tab-content active" id="tab-overview">
+    <section class="hero">
+      <div class="hero-badge">🛡️ Open Source Security Toolkit — v2.0.0</div>
+      <h1>KWT5H13LD</h1>
+      <p class="tagline">Guarding Kuwait's Cyber Gates</p>
+      <div class="hero-actions">
+        <a class="btn btn-primary" href="https://github.com/SiteQ8/KWT5h13ld" target="_blank">★ Star on GitHub</a>
+        <a class="btn btn-outline" href="#" onclick="switchTab('install')">Quick Install →</a>
+      </div>
+    </section>
+    <div class="stats-strip fade-up">
+      <div class="stat-item"><div class="stat-number">30+</div><div class="stat-label">Security Modules</div></div>
+      <div class="stat-item"><div class="stat-number">9</div><div class="stat-label">Categories</div></div>
+      <div class="stat-item"><div class="stat-number">200+</div><div class="stat-label">Security Checks</div></div>
+      <div class="stat-item"><div class="stat-number">0</div><div class="stat-label">Dependencies</div></div>
+    </div>
+    <section class="section fade-up">
+      <div class="section-header"><div class="overline">Why KWT5H13LD</div><h2>Built for Defenders</h2><p>Designed by security practitioners for security practitioners</p></div>
+      <div class="features-grid">
+        <div class="feature-card"><div class="feature-icon">⚡</div><h4>Zero Dependencies</h4><p>Runs on pure bash. Uses system tools already on your servers. No Python, no Ruby, no Node — just shell.</p></div>
+        <div class="feature-card"><div class="feature-icon">🧩</div><h4>Modular Architecture</h4><p>Load only what you need. Each module is self-contained and independently executable via CLI or interactive menu.</p></div>
+        <div class="feature-card"><div class="feature-icon">☁️</div><h4>Multi-Cloud Ready</h4><p>Supports AWS, Azure, and GCP with native CLI integration for cloud security auditing and IAM review.</p></div>
+        <div class="feature-card"><div class="feature-icon">📊</div><h4>Automated Reports</h4><p>Generate HTML security reports with pass/fail scoring. Export to TXT, JSON, or HTML for stakeholder reporting.</p></div>
+        <div class="feature-card"><div class="feature-icon">📋</div><h4>CIS / ISO / PCI Aligned</h4><p>Checks mapped to industry frameworks. Know exactly which controls pass and which need remediation.</p></div>
+        <div class="feature-card"><div class="feature-icon">🖥️</div><h4>Interactive + CLI</h4><p>Full interactive menu for exploration. Direct CLI commands for automation, CI/CD pipelines, and scripted runs.</p></div>
+      </div>
+    </section>
+    <section class="section fade-up">
+      <div class="section-header"><div class="overline">The Team</div><h2>Kuwait Shield Team</h2></div>
+      <div class="team-card">
+        <div class="team-avatar">AA</div>
+        <h3>Ali AlEnezi</h3>
+        <p class="role">Founder & Lead Developer — KWT5H13LD</p>
+        <p class="bio">Cybersecurity practitioner specializing in security architecture, compliance frameworks, and offensive security tooling.</p>
+        <div class="team-links">
+          <a href="https://github.com/SiteQ8" target="_blank">GitHub: @SiteQ8</a>
+          <a href="mailto:Site@hotmail.com">Site@hotmail.com</a>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <!-- MODULES -->
+  <div class="tab-content" id="tab-modules">
+    <section class="section">
+      <div class="section-header"><div class="overline">Arsenal</div><h2>Security Modules</h2><p>Every module you need to secure, audit, and defend your infrastructure</p></div>
+      <div class="modules-grid">
+        <div class="module-card"><div class="module-icon">☁️</div><h3>Cloud Security Audit</h3><p>Detect public S3 buckets, open security groups, misconfigured IAM policies, unencrypted storage, and exposed cloud services across AWS, Azure, and GCP.</p><div class="module-tags"><span>AWS</span><span>Azure</span><span>GCP</span><span>IAM</span><span>Storage</span></div></div>
+        <div class="module-card"><div class="module-icon">🛡️</div><h3>System Hardening</h3><p>Run CIS benchmark checks on Linux systems — filesystem configuration, kernel parameters, SSH hardening, service enumeration, and user account security.</p><div class="module-tags"><span>CIS</span><span>SSH</span><span>Kernel</span><span>sysctl</span><span>Services</span></div></div>
+        <div class="module-card"><div class="module-icon">🌐</div><h3>Network Defense</h3><p>Network discovery, firewall rule auditing, DNS security assessment (DNSSEC, zone transfers, SPF/DMARC), and TLS/SSL certificate & cipher validation.</p><div class="module-tags"><span>Firewall</span><span>DNS</span><span>TLS</span><span>nmap</span><span>Ports</span></div></div>
+        <div class="module-card"><div class="module-icon">🔍</div><h3>Vulnerability Assessment</h3><p>System CVE scanning, web application security header checks, SUID/SGID binary detection, and dependency vulnerability auditing.</p><div class="module-tags"><span>CVE</span><span>Web Headers</span><span>SUID</span><span>npm</span><span>Trivy</span></div></div>
+        <div class="module-card"><div class="module-icon">📋</div><h3>Compliance & Policy</h3><p>Automated checks against CIS Controls v8, ISO 27001 Annex A, PCI DSS v4.0, and password policy auditing with PAM and login.defs validation.</p><div class="module-tags"><span>CIS v8</span><span>ISO 27001</span><span>PCI DSS</span><span>Password</span></div></div>
+        <div class="module-card"><div class="module-icon">📊</div><h3>Log Analysis</h3><p>Authentication log analysis with brute force detection, syslog anomaly pattern detection, and auditd log review for suspicious system calls.</p><div class="module-tags"><span>auth.log</span><span>syslog</span><span>auditd</span><span>Brute Force</span></div></div>
+        <div class="module-card"><div class="module-icon">🚨</div><h3>Incident Response</h3><p>Forensic system state snapshots, running process anomaly detection, active connection investigation, and persistence mechanism scanning.</p><div class="module-tags"><span>Forensics</span><span>Processes</span><span>Connections</span><span>Persistence</span></div></div>
+        <div class="module-card"><div class="module-icon">🐳</div><h3>Container Security</h3><p>Docker CIS Benchmark auditing, Kubernetes cluster security assessment, container image vulnerability scanning, and privilege escalation detection.</p><div class="module-tags"><span>Docker</span><span>K8s</span><span>Images</span><span>Trivy</span><span>RBAC</span></div></div>
+        <div class="module-card"><div class="module-icon">📦</div><h3>Asset Inventory</h3><p>Full system asset and software inventory collection with hardware profiling, and port-to-service mapping for complete infrastructure visibility.</p><div class="module-tags"><span>Hardware</span><span>Software</span><span>Ports</span><span>Services</span></div></div>
+      </div>
+    </section>
+  </div>
+
+  <!-- DASHBOARD -->
+  <div class="tab-content" id="tab-dashboard">
+    <section class="section">
+      <div class="section-header"><div class="overline">Live Status</div><h2>Security Dashboard</h2><p>Real-time security posture overview from latest scan</p></div>
+      <div class="dashboard-grid">
+        <div class="dash-card">
+          <div class="dash-card-header"><h3>Recent Scan Results</h3><span class="badge badge-green">Last: 2 min ago</span></div>
+          <table class="scan-table"><thead><tr><th>Module</th><th>Status</th><th>Findings</th><th>Severity</th></tr></thead><tbody>
+            <tr><td>harden-linux</td><td><span class="severity-badge sev-pass">✓ Pass</span></td><td>18/22 checks passed</td><td><span class="severity-badge sev-medium">Medium</span></td></tr>
+            <tr><td>harden-ssh</td><td><span class="severity-badge sev-pass">✓ Pass</span></td><td>All checks passed</td><td><span class="severity-badge sev-low">Low</span></td></tr>
+            <tr><td>net-firewall</td><td><span class="severity-badge sev-high">⚠ Alert</span></td><td>3 open ports found</td><td><span class="severity-badge sev-high">High</span></td></tr>
+            <tr><td>vuln-system</td><td><span class="severity-badge sev-critical">✗ Fail</span></td><td>2 CVEs detected</td><td><span class="severity-badge sev-critical">Critical</span></td></tr>
+            <tr><td>comply-cis</td><td><span class="severity-badge sev-pass">✓ Pass</span></td><td>92% compliance</td><td><span class="severity-badge sev-low">Low</span></td></tr>
+            <tr><td>cloud-iam</td><td><span class="severity-badge sev-high">⚠ Alert</span></td><td>Over-permissive roles</td><td><span class="severity-badge sev-high">High</span></td></tr>
+            <tr><td>container-docker</td><td><span class="severity-badge sev-pass">✓ Pass</span></td><td>All containers secure</td><td><span class="severity-badge sev-low">Low</span></td></tr>
+            <tr><td>log-auth</td><td><span class="severity-badge sev-medium">⚠ Warn</span></td><td>47 failed login attempts</td><td><span class="severity-badge sev-medium">Medium</span></td></tr>
+          </tbody></table>
+        </div>
+        <div class="dash-card">
+          <div class="dash-card-header"><h3>Threat Level</h3><span class="badge badge-green">Normal</span></div>
+          <div style="text-align:center;padding:20px 0;">
+            <div class="gauge-circle"><span class="gauge-score">82%</span></div>
+            <p class="gauge-label">Overall Security Score</p>
+            <div class="threat-breakdown">
+              <div class="threat-item"><div class="count" style="color:var(--accent-red);">2</div><div class="label">Critical</div></div>
+              <div class="threat-item"><div class="count" style="color:#ff9632;">3</div><div class="label">High</div></div>
+              <div class="threat-item"><div class="count" style="color:var(--accent-orange);">5</div><div class="label">Medium</div></div>
+              <div class="threat-item"><div class="count" style="color:var(--accent-cyan);">18</div><div class="label">Pass</div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="dash-card">
+        <div class="dash-card-header"><h3>Activity Timeline</h3><span class="badge badge-green">Live</span></div>
+        <div style="font-family:'JetBrains Mono',monospace;font-size:12px;line-height:2.4;">
+          <div><span style="color:var(--text-muted)">14:32:01</span> <span style="color:var(--accent-cyan)">[harden-linux]</span> CIS benchmark scan completed — Score: 82%</div>
+          <div><span style="color:var(--text-muted)">14:31:44</span> <span style="color:var(--accent-red)">[vuln-system]</span> CVE-2024-3094 detected in xz-utils package</div>
+          <div><span style="color:var(--text-muted)">14:31:22</span> <span style="color:var(--accent-orange)">[net-firewall]</span> Port 8080 exposed — no ACL rule found</div>
+          <div><span style="color:var(--text-muted)">14:30:58</span> <span style="color:var(--accent-cyan)">[comply-cis]</span> CIS Controls v8 assessment — 92% compliant</div>
+          <div><span style="color:var(--text-muted)">14:30:15</span> <span style="color:var(--accent-orange)">[log-auth]</span> 47 failed SSH attempts from 185.220.101.x</div>
+          <div><span style="color:var(--text-muted)">14:29:50</span> <span style="color:var(--accent-cyan)">[harden-ssh]</span> SSH configuration audit — All checks passed</div>
+          <div><span style="color:var(--text-muted)">14:29:30</span> <span style="color:var(--accent-purple)">[cloud-iam]</span> IAM policy review — 2 over-permissive roles detected</div>
+          <div><span style="color:var(--text-muted)">14:29:01</span> <span style="color:var(--accent-cyan)">[container-docker]</span> Docker CIS benchmark — All containers secure</div>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <!-- TERMINAL -->
+  <div class="tab-content" id="tab-terminal">
+    <section class="section">
+      <div class="section-header"><div class="overline">In Action</div><h2>See It Run</h2><p>A taste of what KWT5H13LD looks like in your terminal</p></div>
+      <div class="terminal-window">
+        <div class="terminal-titlebar">
+          <span class="terminal-dot dot-red"></span><span class="terminal-dot dot-yellow"></span><span class="terminal-dot dot-green"></span>
+          <span class="terminal-title">kwt5h13ld — bash — 120×40</span>
+        </div>
+        <div class="terminal-body" id="terminalBody">
+          <div><span class="term-prompt">root@server:~# </span><span class="term-command">sudo ./kwt5h13ld.sh</span></div>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <!-- INSTALL -->
+  <div class="tab-content" id="tab-install">
+    <section class="section">
+      <div class="section-header"><div class="overline">Get Started</div><h2>Installation</h2><p>Up and running in under 30 seconds</p></div>
+      <div class="install-steps">
+        <div class="install-step"><div class="step-num">1</div><div class="step-content"><h4>Clone the repository</h4><code>git clone https://github.com/SiteQ8/KWT5h13ld.git</code></div></div>
+        <div class="install-step"><div class="step-num">2</div><div class="step-content"><h4>Make it executable</h4><code>cd KWT5h13ld && chmod +x kwt5h13ld.sh</code></div></div>
+        <div class="install-step"><div class="step-num">3</div><div class="step-content"><h4>Run the toolkit</h4><code>sudo ./kwt5h13ld.sh</code></div></div>
+        <div class="install-step"><div class="step-num">→</div><div class="step-content"><h4>Or run a specific module</h4><code>./kwt5h13ld.sh harden-linux -v</code></div></div>
+      </div>
+    </section>
+  </div>
+
+  <footer class="footer">
+    <div class="footer-brand"><img src="../logo.png" alt="KWT5H13LD"><span>KWT5H13LD</span></div>
+    <p>Guarding Kuwait's Cyber Gates — Open Source Security Toolkit</p>
+    <div class="footer-links">
+      <a href="https://github.com/SiteQ8/KWT5h13ld" target="_blank">GitHub</a>
+      <a href="#">MIT License</a>
+      <a href="#">Made in Kuwait 🇰🇼</a>
+    </div>
+  </footer>
 </div>
-</footer>
 
 <script>
-// Scroll reveal
-const observer = new IntersectionObserver((entries) => {
-  entries.forEach(entry => {
-    if (entry.isIntersecting) {
-      entry.target.classList.add('visible');
-    }
-  });
-}, { threshold: 0.1 });
-
-document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+function handleLogin(){var u=document.getElementById('loginUser').value,p=document.getElementById('loginPass').value,e=document.getElementById('loginError');if(u==='admin'&&p==='password'){document.getElementById('loginScreen').classList.add('hidden');setTimeout(function(){document.getElementById('mainApp').classList.add('visible');document.getElementById('loginScreen').style.display='none';startTerminalAnimation();initScrollAnimations();},500);}else{e.classList.add('show');document.getElementById('loginPass').value='';setTimeout(function(){e.classList.remove('show');},3000);}}
+document.addEventListener('keydown',function(e){if(e.key==='Enter'&&document.getElementById('loginScreen').style.display!=='none')handleLogin();});
+function handleLogout(){document.getElementById('mainApp').classList.remove('visible');document.getElementById('loginScreen').style.display='flex';document.getElementById('loginScreen').classList.remove('hidden');document.getElementById('loginUser').value='';document.getElementById('loginPass').value='';}
+function switchTab(id,el){document.querySelectorAll('.tab-content').forEach(function(t){t.classList.remove('active');});document.querySelectorAll('.topnav-links a').forEach(function(a){a.classList.remove('active');});document.getElementById('tab-'+id).classList.add('active');if(el)el.classList.add('active');window.scrollTo({top:0,behavior:'smooth'});}
+function startTerminalAnimation(){var body=document.getElementById('terminalBody');var lines=[{t:'',d:400},{t:'<span class="term-header">[*] ════════════════════════════════════════════════════════════</span>',d:200},{t:'<span class="term-header">[*]   KWT5H13LD — Kuwait Shield Security Toolkit v2.0.0</span>',d:200},{t:'<span class="term-header">[*]   Guarding Kuwait\'s Cyber Gates</span>',d:200},{t:'<span class="term-header">[*] ════════════════════════════════════════════════════════════</span>',d:400},{t:'',d:200},{t:'<span class="term-info">[*] Loading modules...</span>',d:300},{t:'<span class="term-success">[✓] 30 modules loaded across 9 categories</span>',d:300},{t:'<span class="term-info">[*] Running: Linux CIS Benchmark Assessment</span>',d:500},{t:'',d:200},{t:'<span class="term-comment">    1. Filesystem Configuration</span>',d:200},{t:'<span class="term-success">    [✓] 1.1 /tmp is a separate partition</span>',d:150},{t:'<span class="term-success">    [✓] 1.2 /tmp has noexec option set</span>',d:150},{t:'<span class="term-fail">    [✗] 1.3 /var is NOT a separate partition</span>',d:150},{t:'<span class="term-success">    [✓] 1.4 Sticky bit on world-writable dirs</span>',d:150},{t:'',d:200},{t:'<span class="term-comment">    5. Network Parameters</span>',d:200},{t:'<span class="term-success">    [✓] IP forwarding disabled</span>',d:150},{t:'<span class="term-success">    [✓] ICMP redirects disabled</span>',d:150},{t:'<span class="term-success">    [✓] SYN cookies enabled</span>',d:150},{t:'<span class="term-warn">    [!] TCP timestamps not disabled</span>',d:150},{t:'',d:200},{t:'<span class="term-comment">    7. User Account Security</span>',d:200},{t:'<span class="term-success">    [✓] No non-root UID 0 accounts</span>',d:150},{t:'<span class="term-success">    [✓] No empty passwords</span>',d:150},{t:'<span class="term-fail">    [✗] Root SSH login may be permitted</span>',d:150},{t:'',d:300},{t:'<span class="term-header">[*] ════════════════════════════════════════════════════════════</span>',d:200},{t:'<span class="term-info">[*] Total: 22 | </span><span class="term-success">Pass: 18</span><span class="term-info"> | </span><span class="term-fail">Fail: 4</span><span class="term-info"> | Score: </span><span class="term-success">82%</span>',d:200},{t:'<span class="term-header">[*] ════════════════════════════════════════════════════════════</span>',d:200},{t:'<span class="term-info">[*] Report saved: reports/harden-linux_2026-03-08.html</span>',d:300},{t:'',d:200},{t:'<span class="term-prompt">root@server:~# </span><span class="term-command" style="animation:pulse 1s infinite">█</span>',d:0}];var total=0;lines.forEach(function(l){total+=l.d;setTimeout(function(){var d=document.createElement('div');d.innerHTML=l.t||'&nbsp;';body.appendChild(d);body.scrollTop=body.scrollHeight;},total);});}
+function initScrollAnimations(){var o=new IntersectionObserver(function(e){e.forEach(function(en){if(en.isIntersecting)en.target.classList.add('visible');});},{threshold:0.1});document.querySelectorAll('.fade-up').forEach(function(el){o.observe(el);});}
 </script>
 </body>
 </html>
